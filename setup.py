@@ -130,27 +130,35 @@ def menu():
                 if res[0] is None: continue
                 filename, module_path, cls = res
 
+                name = input("Plugin name: ").strip()
+                if not name:
+                    print("[!] Name cannot be empty.")
+                    continue
+
                 port = get_int_input("Port: ")
 
                 if "Source" in cls or "source" in filename.lower():
+                    cfg["plugins"][name] = {
+                        "enabled": True,
+                        "type": "source",
+                        "module": module_path,
+                        "class": cls,
+                        "port": port
+                    }
                     cfg["source"] = {
                         "module": module_path,
                         "class": cls,
                         "port": port
                     }
                     save_config(cfg)
-                    print(f"[OK] Detected as SOURCE. Automatically assigned to main data source.")
+                    print(f"[OK] Detected as SOURCE. Plugin '{name}' added and assigned as main data source.")
 
                 else:
-                    name = input("Local plugin name (e.g., SOURCE 1): ").strip()
-                    if not name:
-                        print("[!] Name cannot be empty.")
-                        continue
-
                     processor = select_math_processor()
 
                     cfg["plugins"][name] = {
                         "enabled": True,
+                        "type": "sink",
                         "module": module_path,
                         "class": cls,
                         "port": port,
@@ -172,8 +180,8 @@ def menu():
                     continue
 
                 print("\nCurrent plugins:")
-                for name in cfg["plugins"]:
-                    print(f"- {name}")
+                for p_name in cfg["plugins"]:
+                    print(f"- {p_name}")
 
                 name = input("\nEnter plugin name to remove: ").strip()
                 if name in cfg["plugins"]:
