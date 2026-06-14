@@ -168,7 +168,7 @@ python setup.py
 
 ## ▫️ Quick Start
 
-1. Ensure Python version **3.12** or newer is installed on your system.
+1. Ensure Python version **3.14** or newer is installed on your system.
 2. Set up your pipeline environment and attach necessary plugins using the configuration manager:
 ```bash
 python setup.py
