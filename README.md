@@ -27,7 +27,7 @@ To eliminate over-engineered monolithic scripts where network sockets are mixed 
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```text
 SPHENDR/
@@ -150,7 +150,7 @@ class VRCSink(BaseSink):
 
 ---
 
-## 🎛 Using the Configuration Manager (`setup.py`)
+##  Using the Configuration Manager (`setup.py`)
 
 Instead of manual JSON editing, use the built-in CLI tool:
 
