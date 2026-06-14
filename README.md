@@ -1,4 +1,4 @@
-#  SPHENDR — Asynchronous Modular Tracking Data Pipeline
+#  <img src="assets/logo.png" width="38" height="38" valign="middle"> SPHENDR — Asynchronous Modular Tracking Data Pipeline
 
 A high-performance, asynchronous middleware framework built on Python's `asyncio`. **SPHENDR** is designed as an extensible, event-driven pipeline to capture raw orientation data from hardware or software sources (Sources), clean and transform it via dynamically attached mathematical filters (Processors), and broadcast the finalized telemetry to end-node consumers (Sinks) like OpenTrack or VRChat with zero latency.
 
