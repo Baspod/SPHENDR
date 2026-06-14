@@ -75,6 +75,40 @@ def select_python_file():
     return filename, module_path, cls
 
 
+def select_math_processor():
+    utils_dir = os.path.join(BASE_DIR, "utils")
+    if not os.path.exists(utils_dir):
+        return "Default"
+
+    processors = []
+    for root, _, files in os.walk(utils_dir):
+        for file in files:
+            if file.endswith(".py"):
+                try:
+                    with open(os.path.join(root, file), 'r', encoding='utf-8') as f:
+                        content = f.read()
+                        found = re.findall(r'@register_processor\([\'"](\w+)[\'"]\)', content)
+                        processors.extend(found)
+                except:
+                    continue
+
+    processors = list(set(processors))
+    if not processors:
+        return "Default"
+
+    print("\nAvailable Math Processors:")
+    for i, proc in enumerate(processors):
+        print(f"{i + 1}. {proc}")
+
+    try:
+        idx = int(input("Select processor number: ")) - 1
+        if 0 <= idx < len(processors):
+            return processors[idx]
+    except ValueError:
+        pass
+    return "Default"
+
+
 def menu():
     while True:
         try:
@@ -84,7 +118,7 @@ def menu():
                 continue
 
             print("\n--- CONFIG MANAGER ---")
-            print("1. Show settings | 2. Add Plugin | 3. Remove Plugin | 4. Reset | 5. Exit")
+            print("1. Show settings | 2. Add Plugin | 3. Remove Plugin | 4. Configure Math | 5. Reset | 6. Exit")
             choice = input("Select: ")
 
             if choice == "1":
@@ -108,19 +142,29 @@ def menu():
                     print(f"[OK] Detected as SOURCE. Automatically assigned to main data source.")
 
                 else:
-                    name = input("Local plugin name (e.g., OPENTRACK): ").strip()
+                    name = input("Local plugin name (e.g., SOURCE 1): ").strip()
                     if not name:
                         print("[!] Name cannot be empty.")
                         continue
+
+                    processor = select_math_processor()
 
                     cfg["plugins"][name] = {
                         "enabled": True,
                         "module": module_path,
                         "class": cls,
-                        "port": port
+                        "port": port,
+                        "math": {
+                            "active_processor": processor,
+                            "settings": {
+                                "yaw": {"weight": 1.0, "smooth": 0.5},
+                                "pitch": {"weight": 1.0, "smooth": 0.5},
+                                "roll": {"weight": 1.0, "smooth": 0.5}
+                            }
+                        }
                     }
                     save_config(cfg)
-                    print(f"[OK] Detected as SINK. Plugin '{name}' added to pipeline.")
+                    print(f"[OK] Detected as SINK. Plugin '{name}' added with math processor '{processor}'.")
 
             elif choice == "3":
                 if not cfg["plugins"]:
@@ -139,9 +183,42 @@ def menu():
                     print("[!] Plugin not found.")
 
             elif choice == "4":
-                save_config(DEFAULT_CONFIG)
+                if not cfg["plugins"]:
+                    print("[!] No active plugins to configure math.")
+                    continue
+
+                print("\nSelect plugin to update math engine:")
+                plugins_list = list(cfg["plugins"].keys())
+                for i, p_name in enumerate(plugins_list):
+                    print(f"{i + 1}. {p_name}")
+
+                try:
+                    p_idx = int(input("Select number: ")) - 1
+                    if 0 <= p_idx < len(plugins_list):
+                        target_plugin = plugins_list[p_idx]
+                        new_processor = select_math_processor()
+
+                        if "math" not in cfg["plugins"][target_plugin]:
+                            cfg["plugins"][target_plugin]["math"] = {}
+
+                        cfg["plugins"][target_plugin]["math"]["active_processor"] = new_processor
+                        if "settings" not in cfg["plugins"][target_plugin]["math"]:
+                            cfg["plugins"][target_plugin]["math"]["settings"] = {
+                                "yaw": {"weight": 1.0, "smooth": 0.5},
+                                "pitch": {"weight": 1.0, "smooth": 0.5},
+                                "roll": {"weight": 1.0, "smooth": 0.5}
+                            }
+                        save_config(cfg)
+                        print(f"[OK] Math processor for '{target_plugin}' changed to '{new_processor}'.")
+                    else:
+                        print("[!] Invalid selection.")
+                except ValueError:
+                    print("[!] Invalid input.")
 
             elif choice == "5":
+                save_config(DEFAULT_CONFIG)
+
+            elif choice == "6":
                 break
 
         except (EOFError, KeyboardInterrupt):
