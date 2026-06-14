@@ -42,18 +42,22 @@ async def main():
 
     src_cfg = cfg.get("source", {})
     tracker_cls = get_class(src_cfg["module"], src_cfg["class"])
-
     tracker = tracker_cls(**{k: v for k, v in src_cfg.items() if k not in ["module", "class"]})
 
     for name, p_cfg in cfg.get("plugins", {}).items():
-        if p_cfg.get("enabled"):
-            sink_cls = get_class(p_cfg["module"], p_cfg["class"])
-            params = {k: v for k, v in p_cfg.items() if k not in ["enabled", "module", "class"]}
+        if not p_cfg.get("enabled"):
+            continue
 
-            plugin_instance = sink_cls(**params)
-            plugin_instance.name = name
-            bus.subscribe(plugin_instance)
-            print(f"[SYSTEM] Plugin {name} initialized successfully.")
+        if p_cfg.get("type") == "source":
+            continue
+
+        sink_cls = get_class(p_cfg["module"], p_cfg["class"])
+        params = {k: v for k, v in p_cfg.items() if k not in ["enabled", "module", "class", "type"]}
+
+        plugin_instance = sink_cls(**params)
+        plugin_instance.name = name
+        bus.subscribe(plugin_instance)
+        print(f"[SYSTEM] Plugin {name} initialized successfully.")
 
     print("[SYSTEM] System started.")
     await tracker.start(bus)
