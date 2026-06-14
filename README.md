@@ -185,6 +185,6 @@ python __main__.py
 ---
 
 ## Dont forget to visit our Official Plugin Catalog on GitHub Gist:
-  > https://gist.github.com/Baspod/4c0d9aff5c68824ab18d91bdab537296 <
+  > https://gist.github.com/Baspod/4c0d9aff5c68824ab18d91bdab537296 
   
 ---
