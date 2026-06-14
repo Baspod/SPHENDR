@@ -161,7 +161,7 @@ python setup.py
 
 * **Option 2 (Add Plugin):** Scans the `plugins/` directory, detects the plugin type based on its class structure, requests the network port, and registers it. Sinks automatically receive a default math configuration layout.
 * **Option 4 (Configure Math):** Scans the `utils/` directory, lists all available math engines registered via decorators, and lets you bind a processor to any active output plugin.
-                                      **> Visit our Official Plugin Catalog on GitHub Gist:** https://gist.github.com/Baspod/4c0d9aff5c68824ab18d91bdab537296 <
+         **> Visit our Official Plugin Catalog on GitHub Gist:** https://gist.github.com/Baspod/4c0d9aff5c68824ab18d91bdab537296 <
 
 > ⚠️ **Important Configuration Rule:** Modifying or binding math modules (Option 4) is only available when at least one destination plugin (Sink) is registered in the system. Add your receiver first, then configure its computing core.
 
