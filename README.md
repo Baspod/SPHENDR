@@ -37,7 +37,7 @@ SPHENDR/
 │   └── bus.py           # Event-driven DataBus framework (Pub/Sub)
 │
 ├── plugins/             # Directory for network I/O plugins
-│ └── dummy_source.py # Raw plugin
+│ └── dummy_source.py    # Raw plugin
 │
 ├── utils/               # Directory for mathematical modules and filters
 │   ├── registry.py      # Meta-registry for automatic processor discovery
