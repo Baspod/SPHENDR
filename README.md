@@ -37,9 +37,7 @@ SPHENDR/
 │   └── bus.py           # Event-driven DataBus framework (Pub/Sub)
 │
 ├── plugins/             # Directory for network I/O plugins
-│   ├── source_owo.py    # Source plugin for the owoTrack protocol
-│   └── sink_opentrack.py# Sink plugin to stream coordinates to OpenTrack
-│
+│   └── dummy_source.py # Raw plugin  
 ├── utils/               # Directory for mathematical modules and filters
 │   ├── registry.py      # Meta-registry for automatic processor discovery
 │   ├── math_processor.py# Implementation of math engines (Default, Advanced)
